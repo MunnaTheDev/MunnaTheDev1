@@ -12,7 +12,7 @@ WEBROOT="/var/www/whmcs"
 DB_HOST="localhost"
 DB_NAME="whmcs"
 DB_USER="whmcsuser"
-DB_PASS=$(openssl rand -base64 16 | tr -dc 'A-Za-z0-9' | head -c16)
+DB_PASS="1234"
 
 
 echo ">>> Installing packages..."
