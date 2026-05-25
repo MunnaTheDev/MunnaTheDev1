@@ -75,16 +75,17 @@ show_banner
 
 # --- DATA COLLECTION ---
 ask "Panel Domain" "phpmyadmin.nobita.indevs.in" DOMAIN
-ask "Admin Email" "admin@gmail.com" EMAIL
-ask "Admin Username" "admin" USERNAME
-ask "Admin Password" "admin" PASSWORD
+ask "Admin Email" "admin@gmail.com" DB_NAME
+ask "Admin Username" "admin" DB_USER
+ask "Admin Password" "admin" DB_PASS
 
 
 # --- FINAL VALIDATION LOOP ---
 echo -e "\n  ${GOLD}┌─[ REVIEW CONFIGURATION ]${NC}"
 echo -e "  ${GOLD}│${NC} ${GRAY}Domain:${NC}   $DOMAIN"
-echo -e "  ${GOLD}│${NC} ${GRAY}Email:${NC}    $EMAIL"
-echo -e "  ${GOLD}│${NC} ${GRAY}User:${NC}     $USERNAME"
+echo -e "  ${GOLD}│${NC} ${GRAY}Name:${NC}     $DB_NAME"
+echo -e "  ${GOLD}│${NC} ${GRAY}User:${NC}     $DB_USER"
+echo -e "  ${GOLD}│${NC} ${GRAY}Pass:${NC}     $DB_USER"
 echo -e "  ${GOLD}└───────────────────────────${NC}"
 
 while true; do
@@ -189,6 +190,10 @@ rm -rf /var/www/phpmyadmin/config
 rm -rf /var/www/phpmyadmin/setup
 
 
+mariadb -e "CREATE USER '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';" 2>/dev/null || true
+mariadb -e "CREATE DATABASE ${DB_NAME};" 2>/dev/null || true
+mariadb -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'127.0.0.1' WITH GRANT OPTION;"
+mariadb -e "FLUSH PRIVILEGES;"
 #################################
 # Create SSL certificate
 #################################
