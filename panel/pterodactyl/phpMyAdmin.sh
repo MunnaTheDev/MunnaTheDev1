@@ -185,10 +185,6 @@ chmod o+w config/config.inc.php
 chown -R www-data:www-data *
 chown -R www-data:www-data "$INSTALL_DIR"
 chmod -R 755 "$INSTALL_DIR"
-cp /var/www/phpmyadmin/config/config.inc.php /var/www/phpmyadmin
-rm -rf /var/www/phpmyadmin/config
-rm -rf /var/www/phpmyadmin/setup
-
 
 mariadb -e "CREATE USER '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';" 2>/dev/null || true
 mariadb -e "CREATE DATABASE ${DB_NAME};" 2>/dev/null || true
