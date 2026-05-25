@@ -235,7 +235,7 @@ while true; do
         3) update_panel ;;
         4) bash <(curl -fsSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/panel/pterodactyl/ssl.sh) ;;
         5) uninstall_ptero ;;
-        6) bash <(curl -fsSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/panel/pterodactyl/ssl.sh) ;;
+        6) bash <(curl -fsSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/panel/pterodactyl/phpMyAdmin.sh) ;;
         0) clear; exit ;;
         *) echo -e "${RED}  Invalid option selected...${NC}"; sleep 1 ;;
     esac
