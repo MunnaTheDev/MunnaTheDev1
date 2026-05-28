@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==========================================================
-# NOBITA CLOUD SYSTEM | BANE-ANMESH 3S UPLINK
+# NOBITA CLOUD SYSTEM | BANE-ANMESH 1S UPLINK
 # DATE: 2026-04-08 | UI-TYPE: SEMA-HYPER-VISUAL → VIP ELITE
 # ==========================================================
 set -euo pipefail
@@ -39,7 +39,7 @@ EOF
     echo -e "${NC}"
 
     echo -e "${VIOLET}╔══════════════════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${VIOLET}║${NC}               ${P}☢️  BANE-ANMESH 3S UPLINK ${NEON}— ${Y}VIP ELITE ACCESS${NC}              ${VIOLET}║${NC}"
+    echo -e "${VIOLET}║${NC}               ${P}☢️  BANE-ANMESH 1S UPLINK ${NEON}— ${Y}VIP ELITE ACCESS${NC}              ${VIOLET}║${NC}"
     echo -e "${VIOLET}║${NC}               ${DG}v14.0${NC} ${W}|${NC} ${G}SECURE HYPER-VISUAL${NC} ${W}|${NC} ${DG}$(date +"%Y-%m-%d %H:%M:%S")${NC}   ${VIOLET}║${NC}"
     echo -e "${VIOLET}╚══════════════════════════════════════════════════════════════════════════════╝${NC}"
     
@@ -78,13 +78,11 @@ if curl -fsSL -A "Bane-VIP-Agent" --netrc -o "$payload" "$URL"; then
     echo -e " ${DG}└─ Agent Status      :${NC} ${G}AUTHORIZED — VIP TIER${NC}"
    
     echo -e "\n${DG}──────────────────────────────────────────────────────────────────────────────${NC}"
-    echo -e " ${P}★★★ VIP UPLINK ESTABLISHED — EXECUTING PAYLOAD IN 3 SECONDS ★★★${NC}\n"
+    echo -e " ${P}★★★ VIP UPLINK ESTABLISHED — EXECUTING PAYLOAD IN 1 SECOND ★★★${NC}\n"
     
-    echo -ne " ${W}Initiating in ${R}3${NC} "
-    for i in {1..3}; do 
-        echo -ne "${R}●${NC}"; 
-        sleep 1
-    done
+    echo -ne " ${W}Initiating in ${R}1${NC} "
+    echo -ne "${R}●${NC}"
+    sleep 1
     echo -e "\n"
    
     # Execute payload
