@@ -86,6 +86,8 @@ fetch_github_versions() {
 import sys, json
 data = json.load(sys.stdin)
 for r in data:
+    if r.get('prerelease', False):
+        continue
     tag = r.get('tag_name', '')
     if tag.startswith('v'):
         print(tag)
@@ -112,7 +114,7 @@ select_version() {
         return
     fi
 
-    printf '%s\n' "${disp[@]}"
+    printf '%b\n' "${disp[@]}"
     local max=${#tags[@]}
     echo -ne "\n  ${PURPLE}•${NC} ${WHITE}Select version [1-$max]${NC} ${GRAY}[1 = latest]${NC}\n  ${GRAY}╰─>${NC} "
     if ! read -t 10 choice; then
