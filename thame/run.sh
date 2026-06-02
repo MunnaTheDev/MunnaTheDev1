@@ -157,6 +157,7 @@ while true; do
             cd /var/www/pterodactyl
             php artisan view:clear
             php artisan config:clear
+            chown -R www-data:www-data /var/www/pterodactyl/*
             php artisan queue:restart
             pause
             ;;
