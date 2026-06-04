@@ -1,53 +1,64 @@
-
 #!/bin/bash
+set -e
+set -o pipefail
 
-# ==================================================
-#  BLUEPRINT AUTO-INSTALLER | ONE-CLICK
-# ==================================================
-
-# --- COLORS ---
 R="\e[31m"; G="\e[32m"; Y="\e[33m"; B="\e[34m"; C="\e[36m"; W="\e[37m"; N="\e[0m"
-
-# --- CONFIG ---
 PT_DIR="/var/www/pterodactyl"
+REPO="BlueprintFramework/framework"
 
-# --- 1. CHECK ROOT ---
+cleanup() { rm -f "$PT_DIR/release.zip"; }
+trap cleanup EXIT
+
 if [ "$EUID" -ne 0 ]; then
     echo -e "${R}❌ Error: Please run as root (sudo bash $0)${N}"
     exit 1
 fi
 
-# --- 2. PRE-FLIGHT CHECK ---
 clear
 echo -e "${B}╔══════════════════════════════════════════════════════╗${N}"
 echo -e "${B}║${W}       🚀 PTERODACTYL BLUEPRINT AUTO-INSTALLER        ${B}║${N}"
 echo -e "${B}╚══════════════════════════════════════════════════════╝${N}"
 echo
-echo -e "${Y}⚠️  This script will automatically install Blueprint on:${N}"
+echo -e "${Y}⚠  This script will automatically install Blueprint on:${N}"
 echo -e "${C}   $PT_DIR${N}"
 echo
 echo -e "Starting in 3 seconds... (Press Ctrl+C to cancel)"
 sleep 3
 
-# --- 3. VERSION SELECTION (before installation) ---
-echo -e "\n${B}Select Blueprint Version...${N}"
+# --- STEP 1/6: CHECK & INSTALL SYSTEM DEPS ---
+echo -e "\n${B}[1/6] Checking directory and installing dependencies...${N}"
+if [ ! -d "$PT_DIR" ]; then
+    echo -e "${R}❌ Error: Pterodactyl not found at $PT_DIR${N}"
+    exit 1
+fi
+apt update -qq
+apt install -y -qq curl wget unzip ca-certificates git gnupg zip jq
+echo -e "${G}✔ Directory OK, dependencies installed.${N}"
 
-REPO="BlueprintFramework/framework"
-API_URL="https://api.github.com/repos/$REPO/releases"
+# --- STEP 2/6: NODE.JS + YARN ---
+echo -e "\n${B}[2/6] Configuring Node.js environment...${N}"
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor --batch --yes -o /etc/apt/keyrings/nodesource.gpg 2>/dev/null
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+apt update -qq
+dpkg --purge --force-all libnode-dev 2>/dev/null || true
+apt install -y -qq -f
+apt install -y -qq nodejs
+npm install -g yarn
+echo -e "${G}✔ Node.js & Yarn ready.${N}"
 
+# --- STEP 3/6: VERSION SELECTION ---
+echo -e "\n${B}[3/6] Selecting Blueprint version...${N}"
 echo -e "${Y}Fetching available releases...${N}"
-RELEASES_JSON=$(curl -s "$API_URL?per_page=30")
-VERSIONS=()
-URLS=()
+RELEASES_JSON=$(curl -s "https://api.github.com/repos/$REPO/releases?per_page=30")
+VERSIONS=(); URLS=()
 while IFS="|" read -r ver url; do
-    VERSIONS+=("$ver")
-    URLS+=("$url")
+    VERSIONS+=("$ver"); URLS+=("$url")
 done < <(echo "$RELEASES_JSON" | jq -r '.[] | select(.draft == false and .prerelease == false) | "\(.tag_name)|\(.assets[] | select(.name | endswith("release.zip")) | .browser_download_url)"' 2>/dev/null)
 
 if [ ${#VERSIONS[@]} -eq 0 ]; then
     echo -e "${R}⚠ No releases detected. Using latest...${N}"
-    version_PANEL="latest"
-    DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$REPO/releases/latest | grep 'browser_download_url' | grep 'release.zip' | cut -d '"' -f 4)
+    DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$REPO/releases/latest | jq -r '.assets[] | select(.name | endswith("release.zip")) | .browser_download_url')
 else
     echo -e "\n${C}Available versions:${N}"
     echo -e "${W}  [0] latest (default)${N}"
@@ -55,74 +66,50 @@ else
         printf "  ${W}[%d]${N} ${C}%s${N}\n" $((i+1)) "${VERSIONS[$i]}"
     done
     echo
-    echo -e "${Y}Enter version number (default: 0, timeout 10s):${N} "
-    read -t 10 choice
+    read -t 10 -p "$(echo -e "${Y}Enter version number (default: 0): ${N}")" choice
     if [ -z "$choice" ] || [ "$choice" == "0" ]; then
-        version_PANEL="latest"
-        DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$REPO/releases/latest | grep 'browser_download_url' | grep 'release.zip' | cut -d '"' -f 4)
+        DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$REPO/releases/latest | jq -r '.assets[] | select(.name | endswith("release.zip")) | .browser_download_url')
     elif [ "$choice" -ge 1 ] && [ "$choice" -le ${#VERSIONS[@]} ] 2>/dev/null; then
-        idx=$((choice-1))
-        version_PANEL="${VERSIONS[$idx]}"
-        DOWNLOAD_URL="${URLS[$idx]}"
+        DOWNLOAD_URL="${URLS[$((choice-1))]}"
     else
         echo -e "${R}⚠ Invalid choice. Using latest.${N}"
-        version_PANEL="latest"
-        DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$REPO/releases/latest | grep 'browser_download_url' | grep 'release.zip' | cut -d '"' -f 4)
+        DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$REPO/releases/latest | jq -r '.assets[] | select(.name | endswith("release.zip")) | .browser_download_url')
     fi
 fi
-echo -e "${G}✔ Version set to: ${C}$version_PANEL${N}"
 
-# --- 4. EXECUTION ---
-
-# Step 1: Check Directory
-echo -e "\n${B}[1/6] Checking Pterodactyl Directory...${N}"
-if [ ! -d "$PT_DIR" ]; then
-    echo -e "${R}❌ Error: Pterodactyl not found at $PT_DIR${N}"
+if [ -z "$DOWNLOAD_URL" ]; then
+    echo -e "${R}❌ Failed to retrieve download URL. Aborting.${N}"
     exit 1
 fi
-echo -e "${G}✔ Found directory.${N}"
+echo -e "${G}✔ Version selected.${N}"
 
-# Step 2: Install Dependencies
-echo -e "\n${B}[2/6] Installing System Dependencies...${N}"
-apt update -y -q
-apt install -y curl wget unzip ca-certificates git gnupg zip -q
-echo -e "${G}✔ Dependencies installed.${N}"
-
-# Step 3: Install Node.js & Yarn
-echo -e "\n${B}[3/6] Configuring Node.js environment...${N}"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor --batch --yes -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
-apt update -y -q
-apt install -y nodejs -q
-npm i -g yarn
-echo -e "${G}✔ Node.js & Yarn ready.${N}"
-
-# Step 4: Download
-cd "$PT_DIR"
+# --- STEP 4/6: DOWNLOAD & EXTRACT ---
 echo -e "\n${B}[4/6] Downloading Blueprint Framework...${N}"
-wget -q "$DOWNLOAD_URL" -O "$PT_DIR/release.zip"
+cd "$PT_DIR"
+wget -q "$DOWNLOAD_URL" -O release.zip
 unzip -o -q release.zip
+rm -f release.zip
 echo -e "${G}✔ Files extracted.${N}"
 
-# Step 5: Configuration
-echo -e "\n${B}[5/6] Generating Configuration...${N}"
-cat <<EOF > "$PT_DIR/.blueprintrc"
+# --- STEP 5/6: CONFIGURATION ---
+echo -e "\n${B}[5/6] Generating configuration...${N}"
+cat <<EOF > .blueprintrc
 WEBUSER="www-data";
 OWNERSHIP="www-data:www-data";
 USERSHELL="/bin/bash";
 EOF
-chmod +x "$PT_DIR/blueprint.sh"
+chmod +x blueprint.sh
 chown -R www-data:www-data "$PT_DIR"
-echo -e "${G}✔ Config generated.${N}"
+echo -e "${G}✔ Configuration ready.${N}"
 
-# Step 6: Install
-echo -e "\n${B}[6/6] Running Blueprint Internal Installer...${N}"
-# Auto-confirm flags often needed for automated scripts, 
-# typically blueprint.sh requires interaction, we run it directly.
-yes | bash "$PT_DIR/blueprint.sh"
+# --- STEP 6/6: INSTALL ---
+echo -e "\n${B}[6/6] Running Blueprint installer...${N}"
+if [ ! -f blueprint.sh ]; then
+    echo -e "${R}❌ blueprint.sh not found after extraction. Aborting.${N}"
+    exit 1
+fi
+yes | bash blueprint.sh
 
-# --- FINISH ---
 echo -e "\n${G}══════════════════════════════════════════════════════${N}"
 echo -e "${G}   🎉 INSTALLATION COMPLETE!${N}"
 echo -e "${W}   Blueprint Framework is now active on your panel.${N}"
