@@ -22,7 +22,8 @@ infra_menu() {
     echo -e " 3) 1Panel"
     echo -e " 4) LXC/LXD"
     echo -e " 5) Docker"
-    echo -e " 6) Back${NC}"
+    echo -e " 5) vpanel"
+    echo -e " 7) Back${NC}"
     echo -e "${GRAY}────────────────────────────────────────${NC}"
     read -rp "Select → " im
 
@@ -59,7 +60,14 @@ infra_menu() {
         bash <(curl -fsSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/Extras/docker.sh)
         pause
         ;;
+
       6)
+        clear
+        echo -e "${CYAN}Installing  docker...${NC}"
+        bash <(curl -fsSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/Extras/docker.sh)
+        pause
+        ;;
+      7)
         clear
         exit 0
         ;;
