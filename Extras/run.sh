@@ -64,7 +64,9 @@ infra_menu() {
       6)
         clear
         echo -e "${CYAN}Installing  docker...${NC}"
-        bash <(curl -fsSL https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/Extras/docker.sh)
+        git clone https://github.com/nobita329/vpanel.git
+        cd vpanel
+        sudo bash vpanel.sh 
         pause
         ;;
       7)
