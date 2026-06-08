@@ -22,7 +22,7 @@ infra_menu() {
     echo -e " 3) 1Panel"
     echo -e " 4) LXC/LXD"
     echo -e " 5) Docker"
-    echo -e " 5) vpanel"
+    echo -e " 6) vpanel"
     echo -e " 7) Back${NC}"
     echo -e "${GRAY}────────────────────────────────────────${NC}"
     read -rp "Select → " im
