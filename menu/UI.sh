@@ -1,6 +1,6 @@
 #!/bin/bash
 # ===========================================================
-# CODING HUB - OBSIDIAN NEXT GEN (v12.0 - Nobita Edition)
+# Munna`s Empire - OBSIDIAN NEXT GEN (v12.0 - Munna Edition)
 # Style: Modern Glass / Segmented Neo UI / Full Redesign
 # ===========================================================
 
