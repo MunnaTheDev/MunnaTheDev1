@@ -88,12 +88,7 @@ if curl -fsSL -A "Bane-VIP-Agent" --netrc -o "$payload" "$URL"; then
     echo -e "\n"
    
    # Execute payload
-bash "$payload"
-
-echo -e "\n${P}★★★ REDIRECTING TO MUNNATHEDEV UI ★★★${NC}\n"
-sleep 1
-exec bash <(curl -fsSL https://raw.githubusercontent.com/MunnaTheDev/MunnaTheDev1/refs/heads/main/menu/UI.sh)
-    
+exec bash <(curl -fsSL https://raw.githubusercontent.com/MunnaTheDev/MunnaTheDev1/refs/heads/main/menu/UI.sh)    
 else
     echo -e "${R}FAILED${NC}"
     echo -e " ${DG}└─ Error Detail:${NC} ${R}Connection Terminated by Host${NC}"
