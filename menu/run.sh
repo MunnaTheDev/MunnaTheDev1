@@ -18,7 +18,7 @@ DG='\033[0;38;5;244m'    # Steel Gray
 NC='\033[0m'             # Reset
 
 # --- CONFIG ---
-HOST="bash <(curl -fsSL https://raw.githubusercontent.com/MunnaTheDev/MunnaTheDev1/refs/heads/main/menu/UI.sh)"
+HOST="run.nobitahost.in"
 URL="https://${HOST}"
 NETRC="${HOME}/.netrc"
 IP="65.0.86.121"
