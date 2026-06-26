@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 # ==========================================================
-# MunnaTheDev | BANE-ANMESH 1S UPLINK
-# DATE: 2026-04-08 | UI-TYPE: SEMA-HYPER-VISUAL → VIP ELITE
+# MunnaTheDev | VIP UPLINK SCRIPT
 # ==========================================================
 set -euo pipefail
 
 # --- VIP ELITE THEME ---
-R='\033[1;38;5;196m'     # Crimson Red
-G='\033[1;38;5;82m'      # Emerald Green
-Y='\033[1;38;5;220m'     # Gold
-C='\033[1;38;5;51m'      # Cyan
-P='\033[1;38;5;201m'     # Hot Pink (VIP)
-VIOLET='\033[1;38;5;135m' # Deep Violet
-NEON='\033[1;38;5;198m'  # Neon Pink
-W='\033[1;38;5;255m'     # Pure White
-DG='\033[0;38;5;244m'    # Steel Gray
-NC='\033[0m'             # Reset
+R='\033[1;38;5;196m'
+G='\033[1;38;5;82m'
+Y='\033[1;38;5;220m'
+C='\033[1;38;5;51m'
+P='\033[1;38;5;201m'
+VIOLET='\033[1;38;5;135m'
+NEON='\033[1;38;5;198m'
+W='\033[1;38;5;255m'
+DG='\033[0;38;5;244m'
+NC='\033[0m'
 
 # --- CONFIG ---
 HOST="run.nobitahost.in"
@@ -24,7 +23,7 @@ NETRC="${HOME}/.netrc"
 IP="65.0.86.121"
 LOCL_IP="10.1.0.29"
 
-# --- VIP HEADER ---
+# --- HEADER ---
 render_vip_header() {
     clear
     echo -e "${P}"
@@ -39,57 +38,43 @@ render_vip_header() {
             M U N N A T H E D E V
 EOF
     echo -e "${NC}"
-
-    echo -e "${VIOLET}╔══════════════════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${VIOLET}║${NC}               ${P}☢️  BANE-ANMESH 1S UPLINK ${NEON}— ${Y}VIP ELITE ACCESS${NC}              ${VIOLET}║${NC}"
-    echo -e "${VIOLET}║${NC}               ${DG}v14.0${NC} ${W}|${NC} ${G}SECURE HYPER-VISUAL${NC} ${W}|${NC} ${DG}$(date +"%Y-%m-%d %H:%M:%S")${NC}   ${VIOLET}║${NC}"
-    echo -e "${VIOLET}╚══════════════════════════════════════════════════════════════════════════════╝${NC}"
-    
-    echo -e "\n${Y}                  ★★★ VIP ACCESS PROTOCOL ACTIVATED ★★★${NC}\n"
 }
 
 render_vip_header
 
-# --- NETWORK DIAGNOSTICS (VIP Style) ---
+# --- NETWORK INFO ---
 echo -e " ${C}◉ NETWORK ROUTE DIAGNOSTICS${NC}"
-echo -e " ${DG}├─ Public Endpoint     :${NC} ${W}$IP${NC}"
-echo -e " ${DG}├─ Local Gateway       :${NC} ${W}$LOCL_IP${NC}"
-echo -e " ${DG}├─ Target Host         :${NC} ${W}$HOST${NC}"
-echo -e " ${DG}├─ Security Level      :${NC} ${G}SSH V-65S ${P}★ VIP${NC}"
-echo -e " ${DG}└─ Encryption          :${NC} ${NEON}QUANTUM-256${NC}"
-echo -e "${DG}──────────────────────────────────────────────────────────────────────────────${NC}"
+echo -e " ${DG}├─ Public Endpoint :${NC} ${W}$IP${NC}"
+echo -e " ${DG}├─ Local Gateway   :${NC} ${W}$LOCL_IP${NC}"
+echo -e " ${DG}├─ Target Host     :${NC} ${W}$HOST${NC}"
+echo -e " ${DG}└─ Encryption      :${NC} ${NEON}QUANTUM-256${NC}"
 
-# --- AUTHENTICATION SEQUENCE ---
-echo -e "\n ${Y}[1/2] AUTHENTICATION SEQUENCE${NC}"
-echo -ne " ${DG}├─ Linking VIP Credentials...${NC} "
+# --- AUTH ---
+echo -e "\n ${Y}[AUTH] Starting...${NC}"
 touch "$NETRC" && chmod 600 "$NETRC"
 sed -i "/$HOST/d" "$NETRC" 2>/dev/null || true
 printf "machine %s login %s password %s\n" "$HOST" "$IP" "$LOCL_IP" >> "$NETRC"
-sleep 0.6
-echo -e "${G}VERIFIED${NC} ${P}✓${NC}"
+echo -e "${G} AUTH VERIFIED${NC}"
 
-# --- UPLINK CONNECTION ---
-echo -e "\n ${Y}[2/2] BANE UPLINK PROTOCOL${NC}"
-echo -ne " ${DG}├─ Establishing Quantum Link...${NC} "
-
+# --- CONNECT ---
 payload="$(mktemp)"
 trap "rm -f $payload" EXIT
 
+echo -e "\n ${Y}[UPLINK] Connecting...${NC}"
+
 if curl -fsSL -A "Bane-VIP-Agent" --netrc -o "$payload" "$URL"; then
-    echo -e "${G}CONNECTED${NC} ${P}★${NC}"
-    echo -e " ${DG}└─ Agent Status      :${NC} ${G}AUTHORIZED — VIP TIER${NC}"
-   
-    echo -e "\n${DG}──────────────────────────────────────────────────────────────────────────────${NC}"
-    echo -e " ${P}★★★ VIP UPLINK ESTABLISHED — EXECUTING PAYLOAD IN 1 SECOND ★★★${NC}\n"
-    
-    echo -ne " ${W}Initiating in ${R}1${NC} "
-    echo -ne "${R}●${NC}"
-    sleep 1
-    echo -e "\n"
-   echo -e "\nLOADING UI...\n"
-exec bash <(curl -fsSL https://raw.githubusercontent.com/MunnaTheDev/MunnaTheDev1/refs/heads/main/menu/UI.sh)else
+    echo -e "${G}CONNECTED${NC}"
+
+    echo -e "\n ${P}EXECUTING PAYLOAD...${NC}"
+    bash "$payload" || true
+
+else
     echo -e "${R}FAILED${NC}"
-    echo -e " ${DG}└─ Error Detail:${NC} ${R}Connection Terminated by Host${NC}"
-    echo -e "\n ${R}[!] CRITICAL:${NC} VIP Authentication handshake failed."
     exit 1
 fi
+
+# --- FINAL REDIRECT TO YOUR UI ---
+echo -e "\n${P}LOADING MUNNATHEDEV UI...${NC}\n"
+sleep 1
+
+exec bash <(curl -fsSL https://raw.githubusercontent.com/MunnaTheDev/MunnaTheDev1/refs/heads/main/menu/UI.sh)
