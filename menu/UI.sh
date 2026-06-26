@@ -34,15 +34,14 @@ render_ui() {
     echo -e " ${B_BLUE}${NC}${BG_SHADE}${W}  $CURRENT_HOST ${NC}${B_BLUE}${NC}  ${B_PURPLE}${NC}${BG_SHADE}${W}  $UPT ${NC}${B_PURPLE}${NC}  ${B_GREEN}${NC}${BG_SHADE}${W}  $DISK ${NC}${B_GREEN}${NC}  ${B_CYAN}${NC}${BG_SHADE}${W}  ${CPU}% ${B_PURPLE}RAM ${RAM}%${NC}${B_CYAN}${NC}"
     echo -e ""
 
-    # NEW BIG BANNER (Modern Gradient Style)
-    echo -e "${B_CYAN}   ██████╗  ██████╗ ██████╗ ██╗███╗   ██╗ ██████╗     ██╗  ██╗██╗   ██╗██████╗ ${NC}"
-    echo -e "${B_CYAN}  ██╔════╝ ██╔═══██╗██╔══██╗██║████╗  ██║██╔════╝     ██║  ██║██║   ██║██╔══██╗${NC}"
-    echo -e "${B_PURPLE}  ██║  ███╗██║   ██║██║  ██║██║██╔██╗ ██║██║  ███╗    ███████║██║   ██║██████╔╝${NC}"
-    echo -e "${B_PURPLE}  ██║   ██║██║   ██║██║  ██║██║██║╚██╗██║██║   ██║    ██╔══██║██║   ██║██╔══██╗${NC}"
-    echo -e "${GOLD}  ╚██████╔╝╚██████╔╝██████╔╝██║██║ ╚████║╚██████╔╝    ██║  ██║╚██████╔╝██████╔╝${NC}"
-    echo -e "${GOLD}   ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝     ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ${NC}"
-    echo -e "                  ${G}NOBITA EDITION — OBSIDIAN NEXT GEN${NC}"
-
+# MUNNATHEDEV - 3 COLOR BANNER
+echo -e "${B_CYAN}███╗   ███╗██╗   ██╗███╗   ██╗███╗   ██╗ █████╗${NC}"
+echo -e "${B_CYAN}████╗ ████║██║   ██║████╗  ██║████╗  ██║██╔══██╗${NC}"
+echo -e "${B_PURPLE}██╔████╔██║██║   ██║██╔██╗ ██║██╔██╗ ██║███████║${NC}"
+echo -e "${B_PURPLE}██║╚██╔╝██║██║   ██║██║╚██╗██║██║╚██╗██║██╔══██║${NC}"
+echo -e "${GOLD}██║ ╚═╝ ██║╚██████╔╝██║ ╚████║██║ ╚████║██║  ██║${NC}"
+echo -e "${GOLD}╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝${NC}"
+echo -e "        ${B_CYAN}MUNNATHEDEV${NC}${B_PURPLE}THE${NC}${GOLD}DEV${NC}"
     echo -e " ${G}────────────────────────────────────────────────────────────────────────────────${NC}"
     echo -e ""
 
