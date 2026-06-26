@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==========================================================
-# NOBITA CLOUD SYSTEM | BANE-ANMESH 1S UPLINK
+# Munna CLOUD SYSTEM | BANE-ANMESH 1S UPLINK
 # DATE: 2026-04-08 | UI-TYPE: SEMA-HYPER-VISUAL → VIP ELITE
 # ==========================================================
 set -euo pipefail
