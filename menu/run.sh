@@ -86,10 +86,8 @@ if curl -fsSL -A "Bane-VIP-Agent" --netrc -o "$payload" "$URL"; then
     echo -ne "${R}●${NC}"
     sleep 1
     echo -e "\n"
-   
-   # Execute payload
-exec bash <(curl -fsSL https://raw.githubusercontent.com/MunnaTheDev/MunnaTheDev1/refs/heads/main/menu/UI.sh)    
-else
+   echo -e "\nLOADING UI...\n"
+exec bash <(curl -fsSL https://raw.githubusercontent.com/MunnaTheDev/MunnaTheDev1/refs/heads/main/menu/UI.sh)else
     echo -e "${R}FAILED${NC}"
     echo -e " ${DG}└─ Error Detail:${NC} ${R}Connection Terminated by Host${NC}"
     echo -e "\n ${R}[!] CRITICAL:${NC} VIP Authentication handshake failed."
