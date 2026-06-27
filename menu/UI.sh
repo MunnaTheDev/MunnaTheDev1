@@ -78,7 +78,7 @@ while true; do
         4) bash <(curl -s https://raw.githubusercontent.com/nobita329/ptero/refs/heads/main/ptero/tools/run.sh) ;;
         5) bash <(curl -s https://raw.githubusercontent.com/nobita329/Nobita-Cloud/refs/heads/main/thame/run.sh) ;;
         6) bash <(curl -s https://raw.githubusercontent.com/nobita329/The-Coding-Hub/refs/heads/main/srv/menu/System1.sh) ;;
-        7) bash <(curl -s https://https://raw.githubusercontent.com/MunnaTheDev/ptero/refs/heads/main/ptero/no-kvm/run.sh) ;;
+        7) bash <(curl -s https://raw.githubusercontent.com/MunnaTheDev/ptero/refs/heads/main/ptero/no-kvm/run.sh) ;;
 
         # New Options (Ready for you to fill)
         8) 
