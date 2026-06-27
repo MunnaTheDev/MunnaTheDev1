@@ -94,7 +94,7 @@ while true; do
             ;;
 
         0|exit|quit)
-            echo -e "\n ${B_RED}● DISCONNECTED${NC}  Goodbye, Nobita."
+            echo -e "\n ${B_RED}● DISCONNECTED${NC}  Goodbye, Munna."
             exit 0 
             ;;
 
